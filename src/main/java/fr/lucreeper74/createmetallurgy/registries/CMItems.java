@@ -25,9 +25,9 @@ public class CMItems {
             TUNGSTEN_WIRE = taggedIngredient("tungsten_wire", forgeItemTag("wires/tungsten"), forgeItemTag("wires"));
 
     public static final ItemEntry<Item>  RAW_WOLFRAMITE = taggedIngredient("raw_wolframite", forgeItemTag("raw_materials/tungsten"), forgeItemTag("raw_materials")),
-            CRUSHED_RAW_WOLFRAMITE = taggedIngredient("crushed_raw_tungsten", CRUSHED_RAW_MATERIALS.tag),
-            DIRTY_WOLFRAMITE_DUST = taggedIngredient("dirty_tungsten_dust", forgeItemTag("dirty_dusts/tungsten"), forgeItemTag("dirty_dusts")),
-            WOLFRAMITE_DUST = taggedIngredient("tungsten_dust", forgeItemTag("dusts/tungsten"), forgeItemTag("dusts"));
+            CRUSHED_RAW_WOLFRAMITE = taggedIngredient("crushed_raw_wolframite", CRUSHED_RAW_MATERIALS.tag),
+            DIRTY_WOLFRAMITE_DUST = taggedIngredient("dirty_wolframite_dust", forgeItemTag("dirty_dusts/tungsten"), forgeItemTag("dirty_dusts")),
+            WOLFRAMITE_DUST = taggedIngredient("wolframite_dust", forgeItemTag("dusts/tungsten"), forgeItemTag("dusts"));
 
     public static final ItemEntry<Item> DIRTY_GOLD_DUST = taggedIngredient("dirty_gold_dust", forgeItemTag("dirty_dusts/gold"), forgeItemTag("dirty_dusts")),
             GOLD_DUST = taggedIngredient("gold_dust", forgeItemTag("dusts/gold"), forgeItemTag("dusts"));
