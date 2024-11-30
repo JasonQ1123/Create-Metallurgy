@@ -35,3 +35,4 @@ Want to help with translation ? Please refer to language file in [`generated/lan
 - Tellurium -> Chinese localization
 - Albertosaurio65 -> Spanish localization
 - TinxLD -> German localization
+- BramVerkuijlen -> Dutch localization
