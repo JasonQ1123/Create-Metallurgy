@@ -2,6 +2,7 @@ package fr.lucreeper74.createmetallurgy.registries;
 
 import com.tterrag.registrate.util.entry.FluidEntry;
 import fr.lucreeper74.createmetallurgy.CreateMetallurgy;
+import fr.lucreeper74.createmetallurgy.content.fluids.MoltenFluidSource;
 import fr.lucreeper74.createmetallurgy.content.fluids.MoltenFluidType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -53,7 +54,7 @@ public class CMFluids {
                         .slopeFindDistance(slopeDistance)
                         .explosionResistance(explosionResistance))
                 .tag(forgeFluidTag("molten_" + name), forgeFluidTag("molten_materials"))
-                .source(ForgeFlowingFluid.Source::new)
+                .source(MoltenFluidSource::new)
                 .bucket()
                 .build()
                 .register();
