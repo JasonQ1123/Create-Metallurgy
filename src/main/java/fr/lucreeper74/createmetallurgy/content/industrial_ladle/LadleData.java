@@ -1,7 +1,6 @@
 package fr.lucreeper74.createmetallurgy.content.industrial_ladle;
 
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
-import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

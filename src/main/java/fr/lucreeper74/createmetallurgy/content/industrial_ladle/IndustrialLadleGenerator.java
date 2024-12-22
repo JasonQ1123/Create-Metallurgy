@@ -38,7 +38,7 @@ public class IndustrialLadleGenerator extends SpecialBlockStateGen {
         else if (bottom)
             shapeName = "bottom";
 
-        String modelName = shapeName + (shape == FluidTankBlock.Shape.PLAIN ? "" : "_" + shape.getSerializedName());;
+        String modelName = shapeName + (shape == FluidTankBlock.Shape.PLAIN ? "" : "_" + shape.getSerializedName());
 
         return AssetLookup.partialBaseModel(ctx, prov, modelName);
     }

@@ -36,7 +36,7 @@ public class MeltingInventory implements IItemHandlerModifiable {
 
     public MeltingSlot getSlot(int slot) {
         if (slot >= firstLimitedSlot)
-            throw new IndexOutOfBoundsException();;
+            throw new IndexOutOfBoundsException();
 
         if (slots[slot] == null)
             slots[slot] = new MeltingSlot(be, slot);
