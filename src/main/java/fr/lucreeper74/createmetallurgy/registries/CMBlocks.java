@@ -1,11 +1,13 @@
 package fr.lucreeper74.createmetallurgy.registries;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.fluids.tank.FluidTankItem;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.processing.basin.BasinGenerator;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.data.AssetLookup;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
@@ -24,6 +26,9 @@ import fr.lucreeper74.createmetallurgy.content.casting.table.CastingTableBlock;
 import fr.lucreeper74.createmetallurgy.content.foundry_basin.FoundryBasinBlock;
 import fr.lucreeper74.createmetallurgy.content.foundry_lids.glassed_lid.GlassedFoundryLidBlock;
 import fr.lucreeper74.createmetallurgy.content.foundry_lids.glassed_lid.GlassedFoundryLidGenerator;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleBlock;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleGenerator;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleModel;
 import fr.lucreeper74.createmetallurgy.content.light_bulb.LightBulbBlock;
 import fr.lucreeper74.createmetallurgy.tabs.CMCreativeTabs;
 import fr.lucreeper74.createmetallurgy.utils.CMDyeHelper;
@@ -38,6 +43,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
@@ -200,6 +206,18 @@ public class CMBlocks {
             .transform(BlockStressDefaults.setImpact(8.0))
             .item()
             .transform(customItemModel("foundry_mixer", "item"))
+            .register();
+
+    public static final BlockEntry<IndustrialLadleBlock> INDUSTRIAL_LADLE = REGISTRATE.block("industrial_ladle", Material.METAL, IndustrialLadleBlock::new)
+            .initialProperties(SharedProperties::copperMetal)
+            .properties(p -> p.noOcclusion().isRedstoneConductor((p1, p2, p3) -> true))
+            .transform(pickaxeOnly())
+            .blockstate(new IndustrialLadleGenerator()::generate)
+            .onRegister(CreateRegistrate.blockModel(() -> IndustrialLadleModel::new))
+            .addLayer(() -> RenderType::cutoutMipped)
+            .item(FluidTankItem::new)
+            .model(AssetLookup.customBlockItemModel("_", "block_single_window"))
+            .build()
             .register();
 
     public static final BlockEntry<BeltGrinderBlock> BELT_GRINDER_BLOCK = REGISTRATE

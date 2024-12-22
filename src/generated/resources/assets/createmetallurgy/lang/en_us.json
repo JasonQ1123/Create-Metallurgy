@@ -32,6 +32,7 @@
   "block.createmetallurgy.glassed_foundry_lid": "Glassed Foundry Lid",
   "block.createmetallurgy.gray_light_bulb": "Gray Light Bulb",
   "block.createmetallurgy.green_light_bulb": "Green Light Bulb",
+  "block.createmetallurgy.industrial_ladle": "Industrial Ladle",
   "block.createmetallurgy.light_blue_light_bulb": "Light Blue Light Bulb",
   "block.createmetallurgy.light_bulb.tooltip.summary": "Emits _light_ proportionally to the _redstone_ signal received, can be in _network_ with others bulbs.",
   "block.createmetallurgy.light_gray_light_bulb": "Light Gray Light Bulb",

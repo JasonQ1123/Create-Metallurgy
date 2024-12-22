@@ -318,8 +318,6 @@ public class BeltGrinderBlockEntity extends KineticBlockEntity {
         if (stack == null || stack.isEmpty())
             return;
 
-        //TODO if metals items recipes, then display spark particles
-
         ParticleOptions particleData;
         float speed = 1;
         if (stack.getItem() instanceof BlockItem)

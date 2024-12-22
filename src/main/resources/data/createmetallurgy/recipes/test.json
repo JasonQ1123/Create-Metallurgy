@@ -1,0 +1,25 @@
+{
+  "type": "createmetallurgy:bulk_melting",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:storage_blocks/gold"
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "processingTime": 80,
+  "minHeatRequirement": 2,
+  "results": [
+    {
+      "amount": 600,
+      "fluid": "createmetallurgy:molten_gold"
+    }
+  ]
+}

@@ -14,6 +14,8 @@ import fr.lucreeper74.createmetallurgy.content.belt_grinder.BeltGrinderRenderer;
 import fr.lucreeper74.createmetallurgy.content.casting.basin.CastingBasinBlockEntity;
 import fr.lucreeper74.createmetallurgy.content.casting.table.CastingTableBlockEntity;
 import fr.lucreeper74.createmetallurgy.content.foundry_basin.FoundryBasinBlockEntity;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleBlockEntity;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleRenderer;
 import fr.lucreeper74.createmetallurgy.content.light_bulb.LightBulbBlockEntity;
 import fr.lucreeper74.createmetallurgy.content.light_bulb.LightBulbRenderer;
 
@@ -50,6 +52,12 @@ public class CMBlockEntityTypes {
             .instance(() -> FoundryMixerInstance::new)
             .validBlocks(CMBlocks.FOUNDRY_MIXER_BLOCK)
             .renderer(() -> FoundryMixerRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<IndustrialLadleBlockEntity> INDUSTRIAL_LADLE = REGISTRATE
+            .blockEntity("industrial_ladle", IndustrialLadleBlockEntity::new)
+            .validBlocks(CMBlocks.INDUSTRIAL_LADLE)
+            .renderer(() -> IndustrialLadleRenderer::new)
             .register();
 
     public static final BlockEntityEntry<BeltGrinderBlockEntity> BELT_GRINDER = REGISTRATE
