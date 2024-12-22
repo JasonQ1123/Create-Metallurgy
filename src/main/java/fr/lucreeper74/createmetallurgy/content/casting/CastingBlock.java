@@ -68,7 +68,7 @@ public abstract class CastingBlock extends Block implements IBE<CastingBlockEnti
                 }
                 if (be.moldInv.isEmpty()) {
                     be.moldInv.insertItem(0, heldItem, false);
-                    player.setItemInHand(handIn, heldItem.split(heldItem.getCount() - 1));
+                    heldItem.shrink(1);
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM,
                             SoundSource.PLAYERS, 1f, 1f + Create.RANDOM.nextFloat());
                     return InteractionResult.SUCCESS;
