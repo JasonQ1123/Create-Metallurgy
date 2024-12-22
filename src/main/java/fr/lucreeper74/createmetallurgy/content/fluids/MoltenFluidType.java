@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
@@ -33,9 +34,7 @@ public class MoltenFluidType extends AllFluids.TintedFluidType {
 
     @Override
     public boolean move(FluidState state, LivingEntity entity, Vec3 movementVector, double gravity) {
-        Vec3 movement = entity.getDeltaMovement();
-        Vec3 newMovement = new Vec3(movement.x * 0.6d, movement.y, movement.z * 0.6d);
-        entity.setDeltaMovement(newMovement);
+        entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.6F, 1.0F, 0.6F));
         entity.hurt(CMDamageTypes.moltenFluid(entity.level()), 4.0F);
         entity.setSecondsOnFire(15);
         return false;
@@ -55,6 +54,12 @@ public class MoltenFluidType extends AllFluids.TintedFluidType {
         } else {
             level.playLocalSound(pX, pY, pZ, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 0.3F, 3.0F, false);
         }
+    }
+
+    @Override
+    public boolean supportsBoating(Boat boat) {
+        boat.setSecondsOnFire(10);
+        return super.supportsBoating(boat);
     }
 
     public boolean canExtinguish(Entity entity) {
