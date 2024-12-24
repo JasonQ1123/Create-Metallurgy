@@ -64,7 +64,7 @@ public abstract class CastingBlock extends Block implements IBE<CastingBlockEnti
                     return InteractionResult.SUCCESS;
                 }
                 if (be.moldInv.isEmpty()) {
-                    be.moldInv.insertItem(0, heldItem, false);
+                    be.moldInv.insertItem(0, heldItem.copy(), false);
                     heldItem.shrink(1);
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM,
                             SoundSource.PLAYERS, 1f, 1f + Create.RANDOM.nextFloat());
