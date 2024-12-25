@@ -50,7 +50,10 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
     protected CastingRecipe currentRecipe;
     protected FluidStack fluidBuffer;
     public boolean running;
+    // Current recipe progress
     public int processingTick;
+    // Total processing Ticks needed for the recipe
+    public int totalProcessTicks;
 
     public CastingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -74,6 +77,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         compound.put("inputTank", inputTank.writeToNBT(new CompoundTag()));
         compound.put("fluidBuffer", fluidBuffer.writeToNBT(new CompoundTag()));
         compound.putInt("castingTime", processingTick);
+        compound.putInt("totalTime", processingTick);
         compound.putBoolean("running", running);
     }
 
@@ -85,6 +89,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         inputTank.readFromNBT(compound.getCompound("inputTank"));
         fluidBuffer = FluidStack.loadFluidStackFromNBT(compound.getCompound("fluidBuffer"));
         processingTick = compound.getInt("castingTime");
+        totalProcessTicks = compound.getInt("totalTime");
         running = compound.getBoolean("running");
     }
 
@@ -141,7 +146,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
 
             if (processingTick >= 0) {
                 if (isInAirCurrent(this.getLevel(), this.getBlockPos(), this))
-                    processingTick = processingTick - 2;
+                    processingTick -= 2;
                 else
                     --processingTick;
             }
@@ -176,6 +181,12 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         if (currentRecipe != null)
             return inputTank.getFluidAmount() >= inputTank.getCapacity() && matchCastingRecipe(currentRecipe);
         return false;
+    }
+
+    public ItemStack getRecipeOutput() {
+        if (currentRecipe == null)
+            return ItemStack.EMPTY;
+        return currentRecipe.getResultItem().copy();
     }
 
     protected void spawnParticles() {
