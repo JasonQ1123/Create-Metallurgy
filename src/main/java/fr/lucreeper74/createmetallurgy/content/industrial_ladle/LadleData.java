@@ -1,13 +1,16 @@
 package fr.lucreeper74.createmetallurgy.content.industrial_ladle;
 
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
-import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.Lang;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import java.util.List;
 
 public class LadleData {
 
@@ -63,50 +66,19 @@ public class LadleData {
         this.controlled = active;
     }
 
-    public LadleData.LadleFluidHandler createHandler() {
-        return new LadleData.LadleFluidHandler();
-    }
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, int boilerSize) {
+        if (!isControlled())
+            return false;
 
-    public class LadleFluidHandler implements IFluidHandler {
+        Lang.builder().add(Lang.number(getCurrentHeat())
+                        .style(ChatFormatting.GOLD)).forGoggles(tooltip);
 
-        @Override
-        public int getTanks() {
-            return 1;
-        }
+        tooltip.add(Components.immutableEmpty());
 
-        @Override
-        public FluidStack getFluidInTank(int tank) {
-            return FluidStack.EMPTY;
-        }
+        Lang.translate("tooltip.capacityProvided")
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip);
 
-        @Override
-        public int getTankCapacity(int tank) {
-            return 10000;
-        }
-
-        @Override
-        public boolean isFluidValid(int tank, FluidStack stack) {
-            return FluidHelper.isWater(stack.getFluid());
-        }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) {
-            if (!isFluidValid(0, resource))
-                return 0;
-            int amount = resource.getAmount();
-//            if (action.execute())
-//                gatheredSupply += amount;
-            return amount;
-        }
-        @Override
-        public FluidStack drain(FluidStack resource, FluidAction action) {
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public FluidStack drain(int maxDrain, FluidAction action) {
-            return FluidStack.EMPTY;
-        }
-
+        return true;
     }
 }

@@ -1,14 +1,5 @@
 {
   "type": "createmetallurgy:bulk_melting",
-  "conditions": [
-    {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:storage_blocks/gold"
-      }
-    }
-  ],
   "ingredients": [
     {
       "tag": "forge:storage_blocks/gold"

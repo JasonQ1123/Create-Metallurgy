@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -299,7 +300,7 @@ public class IndustrialLadleBlockEntity extends SmartBlockEntity implements IHav
     }
 
     private IFluidHandler handlerForFluidCapability() {
-        return isController() ? ladle.isControlled() ? ladle.createHandler() : tankInventory
+        return isController() ? tankInventory
                 : getControllerBE() != null ? getControllerBE().handlerForFluidCapability() : new FluidTank(0);
     }
 
@@ -544,5 +545,16 @@ public class IndustrialLadleBlockEntity extends SmartBlockEntity implements IHav
     public FluidStack getFluid(int tank) {
         return tankInventory.getFluid()
                 .copy();
+    }
+
+    @Override
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        IndustrialLadleBlockEntity controllerBE = getControllerBE();
+        if (controllerBE == null)
+            return false;
+        if (controllerBE.ladle.addToGoggleTooltip(tooltip, isPlayerSneaking, controllerBE.getTotalTankSize()))
+            return true;
+        return containedFluidTooltip(tooltip, isPlayerSneaking,
+                controllerBE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
     }
 }

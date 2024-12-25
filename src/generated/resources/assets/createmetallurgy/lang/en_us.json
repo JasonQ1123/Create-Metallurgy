@@ -105,6 +105,7 @@
   "createmetallurgy.ponder.tag.metalwork": "Metalwork",
   "createmetallurgy.ponder.tag.metalwork.description": "Components which used to work metals",
   "createmetallurgy.recipe.alloying": "Foundry Alloying",
+  "createmetallurgy.recipe.bulk_melting": "Bulk Melting",
   "createmetallurgy.recipe.casting.mold_consumed": "Mold consumed!",
   "createmetallurgy.recipe.casting_in_basin": "Casting In Basin",
   "createmetallurgy.recipe.casting_in_table": "Casting In Table",

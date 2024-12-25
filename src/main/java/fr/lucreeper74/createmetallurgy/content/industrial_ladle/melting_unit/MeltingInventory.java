@@ -39,7 +39,7 @@ public class MeltingInventory implements IItemHandlerModifiable {
             throw new IndexOutOfBoundsException();
 
         if (slots[slot] == null)
-            slots[slot] = new MeltingSlot(be, slot);
+            slots[slot] = new MeltingSlot(be);
 
         return slots[slot];
     }

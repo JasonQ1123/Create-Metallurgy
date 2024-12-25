@@ -3,7 +3,7 @@ package fr.lucreeper74.createmetallurgy.content.industrial_ladle.melting_unit;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeConditions;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
-import fr.lucreeper74.createmetallurgy.content.industrial_ladle.recipe.BulkMeltingRecipe;
+import fr.lucreeper74.createmetallurgy.content.industrial_ladle.BulkMeltingRecipe;
 import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleBlockEntity;
 import fr.lucreeper74.createmetallurgy.registries.CMRecipeTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -24,13 +24,10 @@ public class MeltingSlot implements ContainerData {
     private ItemStack stack;
     private final IndustrialLadleBlockEntity be;
     private ProcessingRecipe<?> currentRecipe;
-    private final int index;
+    public int processingTime;
 
-    private int processingTime;
-
-    public MeltingSlot(IndustrialLadleBlockEntity be, int index) {
+    public MeltingSlot(IndustrialLadleBlockEntity be) {
         this.be = be;
-        this.index = index;
         processingTime = 0;
         stack = ItemStack.EMPTY;
     }
@@ -106,7 +103,7 @@ public class MeltingSlot implements ContainerData {
             return null;
 
         Predicate<Recipe<?>> type = RecipeConditions.isOfType(CMRecipeTypes.BULK_MELTING.getType(), CMRecipeTypes.MELTING.getType());
-        List<Recipe<?>> recipes = RecipeFinder.get(new Object(), level, type).stream()
+        List<Recipe<?>> recipes = RecipeFinder.get(BulkMeltingCacheKey, level, type).stream()
                 .filter(this::matchCastingRecipe)
                 .sorted((r1, r2) -> r2.getIngredients()
                         .size()
@@ -140,11 +137,15 @@ public class MeltingSlot implements ContainerData {
 
     public void deserializeNBT(CompoundTag nbt) {
         stack = ItemStack.of(nbt);
+        processingTime = nbt.getInt("processingTime");
     }
 
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         stack.save(nbt);
+        nbt.putInt("processingTime", processingTime);
         return nbt;
     }
+
+    private static final Object BulkMeltingCacheKey = new Object();
 }

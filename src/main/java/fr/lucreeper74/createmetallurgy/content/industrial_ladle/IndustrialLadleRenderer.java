@@ -119,29 +119,28 @@ public class IndustrialLadleRenderer extends SafeBlockEntityRenderer<IndustrialL
     protected void renderItems(IndustrialLadleBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
                                int light, int overlay) {
         int tankIndex = 0;
+        IndustrialLadleBlockEntity controllerBE = be.getControllerBE();
+
         for (int yOffset = 0; yOffset < be.height; yOffset++) {
             for (int xOffset = 0; xOffset < be.width; xOffset++) {
                 for (int zOffset = 0; zOffset < be.width; zOffset++) {
 
-                    ItemStack stack = be.getControllerBE().inputInv.getStackInSlot(tankIndex);
-                    if (stack.isEmpty())
-                        continue;
+                    ItemStack stack = controllerBE.inputInv.getStackInSlot(tankIndex);
 
-                    ms.pushPose();
-                    if (stack.getItem() instanceof BlockItem) {
-                        ms.translate(xOffset + .5f, yOffset, zOffset + .5f);
-                        ms.scale(3.5f, 3.5f, 3.5f);
-                    } else
-                        ms.translate(xOffset + .5f, yOffset + .5f, zOffset + .5f);
+                    if (!stack.isEmpty()) {
+                        ms.pushPose();
+                        if (stack.getItem() instanceof BlockItem) {
+                            ms.translate(xOffset + .5f, yOffset, zOffset + .5f);
+                            ms.scale(3.5f, 3.5f, 3.5f);
+                        } else
+                            ms.translate(xOffset + .5f, yOffset + .5f, zOffset + .5f);
 
-
-
-
-                    Minecraft.getInstance()
-                            .getItemRenderer()
-                            .renderStatic(stack, ItemTransforms.TransformType.GROUND, light, overlay, ms, buffer, 0);
+                        Minecraft.getInstance()
+                                .getItemRenderer()
+                                .renderStatic(stack, ItemTransforms.TransformType.GROUND, light, overlay, ms, buffer, 0);
+                        ms.popPose();
+                    }
                     tankIndex++;
-                    ms.popPose();
                 }
             }
         }

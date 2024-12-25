@@ -1,68 +1,46 @@
-package fr.lucreeper74.createmetallurgy.content.industrial_ladle.recipe;
+package fr.lucreeper74.createmetallurgy.content.industrial_ladle;
 
+import com.google.gson.JsonObject;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import fr.lucreeper74.createmetallurgy.CreateMetallurgy;
 import fr.lucreeper74.createmetallurgy.content.foundry_lids.lid.MeltingRecipe;
-import fr.lucreeper74.createmetallurgy.content.industrial_ladle.IndustrialLadleBlockEntity;
 import fr.lucreeper74.createmetallurgy.content.industrial_ladle.melting_unit.MeltingSlot;
 import fr.lucreeper74.createmetallurgy.registries.CMRecipeTypes;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class BulkMeltingRecipe implements Recipe<RecipeWrapper> {
+public class BulkMeltingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
-    protected final ResourceLocation id;
-    protected Ingredient ingredient;
-    protected FluidStack fluidResult;
-    protected int processingDuration;
     protected int minHeat;
 
-    public BulkMeltingRecipe(ResourceLocation id) {
-        this.id = id;
-        this.ingredient = Ingredient.EMPTY;
-        this.processingDuration = 0;
-        this.minHeat = 0;
-        this.fluidResult = FluidStack.EMPTY;
+    public BulkMeltingRecipe(ProcessingRecipeBuilder.ProcessingRecipeParams params) {
+        super(CMRecipeTypes.BULK_MELTING, params);
+        this.minHeat = -50;
     }
 
     public static boolean match(IndustrialLadleBlockEntity be, MeltingSlot meltingSlot, Recipe<?> recipe) {
         if (recipe instanceof BulkMeltingRecipe bulkRecipe)
-            return bulkRecipe.getIngredient().test(meltingSlot.getStack())
-                   && be.ladle.getCurrentHeat() >= bulkRecipe.getMinHeat();
+            return bulkRecipe.getIngredients().get(0).test(meltingSlot.getStack())
+                && be.ladle.getCurrentHeat() >= bulkRecipe.getMinHeat();
         else
             if (recipe instanceof MeltingRecipe meltingRecipe)
                 return meltingRecipe.getIngredients().get(0).test(meltingSlot.getStack());
-
         return false;
     }
 
     @Override
     public boolean matches(RecipeWrapper inv, Level worldIn) {
-        return getIngredient()
+        return getIngredients().get(0)
                 .test(inv.getItem(0));
-    }
-
-    @Override
-    public ItemStack assemble(RecipeWrapper pContainer) {
-        return null;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem() {
-        return null;
     }
 
     @Override
@@ -84,19 +62,41 @@ public class BulkMeltingRecipe implements Recipe<RecipeWrapper> {
         return CMRecipeTypes.BULK_MELTING;
     }
 
-    public FluidStack getFluidResult() {
-        return fluidResult;
+    @Override
+    protected int getMaxInputCount() {
+        return 1;
     }
 
-    public int getProcessingDuration() {
-        return processingDuration;
-    }
-
-    public Ingredient getIngredient() {
-        return ingredient;
+    @Override
+    protected int getMaxOutputCount() {
+        return 1;
     }
 
     public int getMinHeat() {
         return minHeat;
+    }
+
+    @Override
+    public void readAdditional(JsonObject json) {
+        super.readAdditional(json);
+        minHeat = GsonHelper.getAsInt(json, "minHeatRequirement", -50);
+    }
+
+    @Override
+    public void writeAdditional(JsonObject json) {
+        super.writeAdditional(json);
+        json.addProperty("minHeatRequirement", minHeat);
+    }
+
+    @Override
+    public void readAdditional(FriendlyByteBuf buffer) {
+        super.readAdditional(buffer);
+        minHeat = buffer.readInt();
+    }
+
+    @Override
+    public void writeAdditional(FriendlyByteBuf buffer) {
+        super.writeAdditional(buffer);
+        buffer.writeInt(minHeat);
     }
 }
