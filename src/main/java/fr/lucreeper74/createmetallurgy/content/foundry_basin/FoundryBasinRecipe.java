@@ -138,9 +138,15 @@ public class FoundryBasinRecipe extends ProcessingRecipe<SmartInventory> {
             }
 
             if (recipe instanceof FoundryBasinRecipe basinRecipe) {
-                if (!ItemHandlerHelper.insertItemStacked(basin.getOutputInventory(), basinRecipe.getResultItem().copy(), simulate)
-                        .isEmpty())
-                    return false;
+                SmartInventory outputInv = basin.getOutputInventory();
+
+                outputInv.allowInsertion();
+                for (ItemStack output : basinRecipe.rollResults()) {
+                    if (!ItemHandlerHelper.insertItemStacked(outputInv, output.copy(), simulate)
+                            .isEmpty())
+                        return false;
+                }
+                outputInv.forbidInsertion();
 
                 IFluidHandler targetTank = basin.getOutputTank().getPrimaryHandler();
                 FluidStack fluidResult = basinRecipe.getFluidResults().get(0);
@@ -159,7 +165,7 @@ public class FoundryBasinRecipe extends ProcessingRecipe<SmartInventory> {
 
     @Override
     protected int getMaxInputCount() {
-        return 9;
+        return 3;
     }
 
     @Override

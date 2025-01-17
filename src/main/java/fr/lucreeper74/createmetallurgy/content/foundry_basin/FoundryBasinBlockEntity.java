@@ -36,8 +36,8 @@ public class FoundryBasinBlockEntity extends BasinBlockEntity {
 
     public FoundryBasinBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        inputInventory = (BasinInventory) new BasinInventory(1, this).withMaxStackSize(9);
-        outputInventory = new BasinInventory(1, this).forbidInsertion().withMaxStackSize(9);
+        inputInventory = (BasinInventory) new BasinInventory(3, this).withMaxStackSize(9);
+        outputInventory = new BasinInventory(4, this).forbidInsertion().withMaxStackSize(9);
 
         visualizedOutputFluids = Collections.synchronizedList(new ArrayList<>());
     }
