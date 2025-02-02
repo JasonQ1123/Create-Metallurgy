@@ -37,6 +37,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -233,10 +234,8 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         List<Recipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
         return list.stream()
                 .filter(this::matchCastingRecipe)
-                .sorted((r1, r2) -> r2.getIngredients()
-                        .size()
-                        - r1.getIngredients()
-                        .size())
+                .sorted(Comparator.comparingInt(r -> r.getIngredients()
+                        .size()))
                 .collect(Collectors.toList());
     }
 
