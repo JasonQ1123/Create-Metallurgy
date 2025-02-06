@@ -4,7 +4,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinInventory;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.utility.*;
 import fr.lucreeper74.createmetallurgy.utils.CMLang;
 import net.minecraft.ChatFormatting;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -40,6 +43,22 @@ public class FoundryBasinBlockEntity extends BasinBlockEntity {
         outputInventory = new BasinInventory(4, this).forbidInsertion().withMaxStackSize(9);
 
         visualizedOutputFluids = Collections.synchronizedList(new ArrayList<>());
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        super.addBehaviours(behaviours);
+        inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 4, 1000, true);
+        outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 4, 1000, true)
+                .forbidInsertion();
+        behaviours.add(inputTank);
+        behaviours.add(outputTank);
+
+        fluidCapability = LazyOptional.of(() -> {
+            LazyOptional<? extends IFluidHandler> inputCap = inputTank.getCapability();
+            LazyOptional<? extends IFluidHandler> outputCap = outputTank.getCapability();
+            return new CombinedTankWrapper(outputCap.orElse(null), inputCap.orElse(null));
+        });
     }
 
     @Override

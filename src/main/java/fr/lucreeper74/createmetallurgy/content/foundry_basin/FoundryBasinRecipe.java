@@ -148,12 +148,16 @@ public class FoundryBasinRecipe extends ProcessingRecipe<SmartInventory> {
                 }
                 outputInv.forbidInsertion();
 
-                IFluidHandler targetTank = basin.getOutputTank().getPrimaryHandler();
-                FluidStack fluidResult = basinRecipe.getFluidResults().get(0);
+                IFluidHandler targetTank = basin.getOutputTank().getCapability().orElse(null);
 
-                IFluidHandler.FluidAction action = simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
-                if (targetTank.fill(fluidResult.copy(), action) != fluidResult.getAmount())
-                    return false;
+                for (FluidStack fluidResult : basinRecipe.getFluidResults()) {
+                    IFluidHandler.FluidAction action = simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
+                    int fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
+                            ? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidResult.copy(), action)
+                            : targetTank.fill(fluidResult.copy(), action);
+                    if (fill != fluidResult.getAmount())
+                        return false;
+                }
             }
         }
         return true;
