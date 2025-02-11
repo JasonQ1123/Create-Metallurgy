@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
 public class CastingFluidTank extends FluidTank {
 
@@ -130,6 +131,23 @@ public class CastingFluidTank extends FluidTank {
             }
             return space;
         }
+    }
+
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        int drained =  Math.min(fluid.getAmount(), maxDrain);
+
+        FluidStack stack = new FluidStack(fluid, drained);
+        if (action.execute() && drained > 0) {
+            fluid.shrink(drained);
+
+            if (fluid.isEmpty())
+                // If no more fluid, reset casting process
+                be.reset(); // Calling sendData()
+            else
+                onContentsChanged();
+        }
+        return stack;
     }
 
     public LerpedFloat getFluidLevel() {

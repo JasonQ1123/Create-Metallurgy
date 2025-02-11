@@ -56,6 +56,9 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
     // Total processing Ticks needed for the recipe
     public int totalProcessTicks;
 
+    // Recipe output RENDERING ONLY
+    public ItemStack lastOutput;
+
     public CastingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         inv = new SmartInventory(1, this, 1, true).forbidInsertion();
@@ -63,6 +66,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inv, moldInv));
         inputTank = new CastingFluidTank(this);
         fluidBuffer = FluidStack.EMPTY;
+        lastOutput = ItemStack.EMPTY;
     }
 
     @Override
@@ -77,6 +81,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         compound.put("inv", inv.serializeNBT());
         compound.put("inputTank", inputTank.writeToNBT(new CompoundTag()));
         compound.put("fluidBuffer", fluidBuffer.writeToNBT(new CompoundTag()));
+        compound.put("lastOutput", lastOutput.serializeNBT());
         compound.putInt("castingTime", processingTick);
         compound.putInt("totalTime", processingTick);
         compound.putBoolean("running", running);
@@ -89,6 +94,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         inv.deserializeNBT(compound.getCompound("inv"));
         inputTank.readFromNBT(compound.getCompound("inputTank"));
         fluidBuffer = FluidStack.loadFluidStackFromNBT(compound.getCompound("fluidBuffer"));
+        lastOutput = ItemStack.of(compound.getCompound("lastOutput"));
         processingTick = compound.getInt("castingTime");
         totalProcessTicks = compound.getInt("totalTime");
         running = compound.getBoolean("running");
@@ -185,9 +191,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
     }
 
     public ItemStack getRecipeOutput() {
-        if (currentRecipe == null)
-            return ItemStack.EMPTY;
-        return currentRecipe.getResultItem().copy();
+        return lastOutput;
     }
 
     protected void spawnParticles() {
@@ -252,6 +256,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         CastingRecipe recipe = (CastingRecipe) recipes.get(0);
         if (action == IFluidHandler.FluidAction.EXECUTE) {
             currentRecipe = recipe;
+            lastOutput = currentRecipe.getResultItem().copy();
             sendData();
         }
 
@@ -263,6 +268,7 @@ public abstract class CastingBlockEntity extends SmartBlockEntity implements IHa
         processingTick = -1;
         currentRecipe = null;
         running = false;
+        lastOutput = ItemStack.EMPTY;
         sendData();
     }
 
